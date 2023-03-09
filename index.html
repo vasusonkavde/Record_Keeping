@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+      integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="/node_modules/angular-material/angular-material.css"
+    />
+    <script src="angular.js"></script>
+  </head>
+  <body>
+    <script>
+      var app = angular.module("Recorde keeping", ["ngMaterial", "ngMessages"]);
+      app.controller("myCtrl", function ($scope) {
+          $scope.details = [
+            {"name":"vasu", "email":"vasu@gmail.com"},
+            {"name":"prajwal","email":"prajwal@gmail.com"}
+         ];
+
+        $scope.add = function () {
+          if ($scope.name == "" || $scope.email == "") {
+            alert("Please fill all the fields");
+            return;
+          } else {
+            if ($scope.details.length == 0) {
+              var newdet = {"name":$scope.name,"email":$scope.email}
+              $scope.details.push(newdet);
+            } else if (
+              $scope.details.length > 0 &&
+              $scope.details.every((item) => item.email !== $scope.email)
+            ) {
+              $scope.details.push({ name: $scope.name, email: $scope.email });
+              $scope.name = "";
+              $scope.email = "";
+            } else {
+              alert("This record already exists");
+            }
+          }
+        };
+
+        $scope.remove = function (index) {
+          $scope.details.splice(index, 1);
+        };
+      });
+    </script>
+    <div
+      ng-app="Recorde keeping"
+      ng-controller="myCtrl"
+      layout="column"
+    >
+      <md-toolbar>
+        <h1 class="title">Recording keeping</h1>
+      </md-toolbar>
+
+      <form
+        name="form"
+        layout="row"
+        layout-xs="column"
+        layout-align="space-around center"
+      >
+        <md-input-container class="md-block" flex="30">
+          <label>Name</label>
+          <input required name="Name" ng-model="name" />
+          <div ng-messages="form.Name.$error">
+            <div ng-message="required">This is required.</div>
+          </div>
+        </md-input-container>
+
+        <md-input-container class="md-block" flex="30">
+          <label>Email</label>
+          <input
+            required
+            type="email"
+            name="Email"
+            ng-model="email"
+            minlength="5"
+            maxlength="100"
+            ng-pattern="/^.+@.+\..+$/"
+          />
+
+          <div ng-messages="form.Email.$error" role="alert">
+            <div
+              ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']"
+            >
+              Your email must be between 5 and 100 characters long and look like
+              an e-mail address.
+            </div>
+          </div>
+        </md-input-container>
+        <md-button
+          type="submit"
+          class="md-raised md-accent"
+          ng-click="add()"
+          style="color: white; font-size: 20px; font-weight: 700"
+          >+</md-button
+        >
+      </form>
+
+      <md-list layout="column">
+        <md-list
+          layout="row"
+          layout-align="space-between center"
+          style="background-color: white; padding: 10px"
+        >
+          <p>Name</p>
+          <p>Email</p>
+          <p>Remove</p>
+        </md-list>
+        <md-list-item
+          ng-repeat="x in details"
+          layout="row"
+          layout-align="space-between center"
+          style="background-color: white; padding: 10px"
+        >
+          <p>{{x.name}}</p>
+          <p>{{x.email}}</p>
+          <md-button ng-click="remove($index)" class="md-raised md-accent">
+            <md-icon class="fa-sharp fa-solid fa-trash" style="color: white;"></md-icon>
+          </md-button>
+        </md-list-item>
+      </md-list>
+    </div>
+
+    <script src="/node_modules/angular/angular.js"></script>
+    <script src="/node_modules/angular-aria/angular-aria.js"></script>
+    <script src="/node_modules/angular-animate/angular-animate.js"></script>
+    <script src="/node_modules/angular-messages/angular-messages.js"></script>
+    <script src="/node_modules/angular-material/angular-material.js"></script>
+  </body>
+</html>
